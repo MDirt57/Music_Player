@@ -1,5 +1,7 @@
 package com.example.music_player
 
+import android.media.AsyncPlayer
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -9,6 +11,7 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,7 +33,8 @@ fun SearchBar(
 @Composable
 fun SongPanel(
     modifier: Modifier = Modifier,
-    name: String
+    name: String,
+    onTap: () -> Unit
 ){
     Surface(
         modifier = modifier.border(1.5.dp, MaterialTheme.colorScheme.secondary, RectangleShape),
@@ -38,7 +42,7 @@ fun SongPanel(
     ) {
         Row() {
             Button(
-                onClick = { /*TODO*/ },
+                onClick = onTap,
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
             ) {
                 Text(text = name, modifier = Modifier.weight(1f), color = MaterialTheme.colorScheme.secondary)
@@ -50,23 +54,34 @@ fun SongPanel(
     }
 }
 
+
 @Composable
 fun SongList(
     modifier: Modifier = Modifier,
-    songs: List<String> = List(20){"music$it"}
+    songs: List<String> = List(20){"music$it"},
+    onTap: () -> Unit
 ){
     LazyColumn(modifier = modifier){
         items(songs){
-                item -> SongPanel(name = item)
+                item -> SongPanel(name = item, onTap = onTap)
         }
     }
 }
 
 @Composable
 fun MainScreen(modifier: Modifier = Modifier){
-    Column(modifier = modifier) {
-        SearchBar()
-        SongList()
+    var isPlaying by remember { mutableStateOf(false) }
+
+    if (isPlaying){
+        PlayerScreen()
+        BackHandler() {
+            isPlaying = false
+        }
+    } else{
+        Column(modifier = modifier) {
+            SearchBar()
+            SongList(onTap = {isPlaying = true})
+        }
     }
 }
 

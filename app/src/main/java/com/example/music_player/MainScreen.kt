@@ -1,6 +1,6 @@
 package com.example.music_player
 
-import android.media.AsyncPlayer
+import android.content.Context
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -14,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 
@@ -58,38 +57,47 @@ fun SongPanel(
 @Composable
 fun SongList(
     modifier: Modifier = Modifier,
-    songs: List<String> = List(20){"music$it"},
-    onTap: () -> Unit
+    songs: List<Song>,
+    onTap: (Song) -> Unit
 ){
     LazyColumn(modifier = modifier){
         items(songs){
-                item -> SongPanel(name = item, onTap = onTap)
+                item -> SongPanel(name = item.name, onTap = { onTap(item) })
         }
     }
 }
 
 @Composable
-fun MainScreen(modifier: Modifier = Modifier){
+fun MainScreen(
+    modifier: Modifier = Modifier,
+    songs: List<Song>,
+    context: Context
+){
+    val player = PlayerActivity(context)
+
     var isPlaying by remember { mutableStateOf(false) }
+    var song by remember { mutableStateOf(Song("",0, 0f)) }
 
     if (isPlaying){
-        PlayerScreen()
+        player.set(song.id)
+        player.play()
+        PlayerScreen(
+            player = player,
+            song = song,
+            prev = {song = if (songs.indexOf(song) - 1 >= 0) songs.get(songs.indexOf(song) - 1) else songs.get(songs.size - 1); player.stop()},
+            next = {song = if (songs.indexOf(song) + 1 < songs.size) songs.get(songs.indexOf(song) + 1) else songs.get(0); player.stop()}
+        )
         BackHandler() {
             isPlaying = false
+            player.stop()
         }
     } else{
         Column(modifier = modifier) {
             SearchBar()
-            SongList(onTap = {isPlaying = true})
+            SongList(songs = songs, onTap = { item -> song = item; isPlaying = true })
         }
     }
 }
-
-//@Preview
-//@Composable
-//fun PreviewElement(){
-//    MainScreen()
-//}
 
 
 

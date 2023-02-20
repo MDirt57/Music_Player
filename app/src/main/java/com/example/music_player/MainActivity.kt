@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainScreen(viewmodel = PlayerActivity(applicationContext))
+                    MainScreen(context = applicationContext, songs = filereader.readFromRaw(applicationContext))
                 }
             }
         }

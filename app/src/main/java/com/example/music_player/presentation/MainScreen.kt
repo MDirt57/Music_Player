@@ -1,5 +1,6 @@
 package com.example.music_player
 
+import android.content.Context
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -15,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import com.example.music_player.data.Song
+import com.example.music_player.domain.Player
 import com.example.music_player.domain.PlayerActivity
 
 
@@ -70,25 +72,27 @@ fun SongList(
 
 @Composable
 fun MainScreen(
+    context: Context,
+    songs: ArrayList<Song>,
     modifier: Modifier = Modifier,
-    viewmodel: PlayerActivity,
 ){
-    val songs = viewmodel.songs
+    val player = Player(context)
 
     var isPlaying by remember { mutableStateOf(false) }
     var song by remember { mutableStateOf(Song("",0, 0f)) }
 
     if (isPlaying){
-        viewmodel.player_start(song.id)
+        player.set(song.id)
+        player.play()
         PlayerScreen(
-            viewmodel = viewmodel,
+            player = player,
             song = song,
-            prev = {song = if (songs.indexOf(song) - 1 >= 0) songs.get(songs.indexOf(song) - 1) else songs.get(songs.size - 1); viewmodel.player_stop()},
-            next = {song = if (songs.indexOf(song) + 1 < songs.size) songs.get(songs.indexOf(song) + 1) else songs.get(0); viewmodel.player_stop()}
+            prev = {song = if (songs.indexOf(song) - 1 >= 0) songs.get(songs.indexOf(song) - 1) else songs.get(songs.size - 1); player.stop()},
+            next = {song = if (songs.indexOf(song) + 1 < songs.size) songs.get(songs.indexOf(song) + 1) else songs.get(0); player.stop()}
         )
         BackHandler() {
             isPlaying = false
-            viewmodel.player_stop()
+            player.stop()
         }
     } else{
         Column(modifier = modifier) {

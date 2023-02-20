@@ -62,31 +62,15 @@ fun ControlPanel(
 
 @Composable
 fun DurationPanel(
-    player: Player,
+    current_time: Float,
+    onSliderChange: (Float) -> Unit,
     duration: Float,
-    next: () -> Unit,
-    isPlaying: Boolean,
     modifier: Modifier = Modifier
 ){
-    var current_time by remember { mutableStateOf(0f) }
-
-    if (player.position() == 0f){
-        current_time = 0f
-    }else if (player.position() >= duration){
-        next()
-    }
-
-//    LaunchedEffect(key1 = Unit, block = {
-//        slideChange(player, {current_time += 1000f})
-//    })
-    LaunchedEffect(key1 = player.id, block = {
-        slideChange2({current_time = player.position()})
-    })
-
     Column(modifier = modifier) {
         Slider(
             value = current_time,
-            onValueChange = {current_time = it; player.seekTo(it)},
+            onValueChange = onSliderChange,
             valueRange = 0f..duration
         )
         Row(horizontalArrangement = Arrangement.SpaceAround, modifier = Modifier.fillMaxWidth()){
@@ -97,6 +81,28 @@ fun DurationPanel(
             Text(text = time_format(duration))
         }
     }
+}
+
+@Composable
+fun StatefullDurationPanel(
+    player: Player,
+    duration: Float,
+    next: () -> Unit,
+    modifier: Modifier = Modifier
+){
+    var current_time by remember { mutableStateOf(0f) }
+
+    if (player.position() == 0f){
+        current_time = 0f
+    }else if (player.position() >= duration){
+        next()
+    }
+
+    LaunchedEffect(key1 = player.id, block = {
+        slideChange({current_time = player.position()})
+    })
+
+    DurationPanel(current_time = current_time, onSliderChange = {it -> current_time = it; player.seekTo(it)}, duration = duration, modifier = modifier)
 }
 
 fun time_format(milliseconds: Float): String{
@@ -126,17 +132,8 @@ fun BackgroundPanel(
     }
 }
 
-suspend fun slideChange(
-    player: Player,
-    perSecond: () -> Unit
-){
-    while(player.isPlaying()){
-        delay(1000L)
-        perSecond()
-    }
-}
 
-suspend fun slideChange2(
+suspend fun slideChange(
     perSecond: () -> Unit
 ){
     while(true){
@@ -148,7 +145,6 @@ suspend fun slideChange2(
 
 @Composable
 fun PlayerScreen(
-    viewmodel: PlayerActivity,
     player: Player,
     prev: () -> Unit,
     next: () -> Unit,
@@ -165,7 +161,7 @@ fun PlayerScreen(
 
     Column(modifier = modifier) {
         BackgroundPanel(name = song.name)
-        DurationPanel(player, song.duration, next, isPlaying)
+        StatefullDurationPanel(player, song.duration, next)
         Spacer(modifier = Modifier.height(10.dp))
         ControlPanel(play_pause = { isPlaying = !isPlaying }, prev = prev, next = next, isPlaying)
     }

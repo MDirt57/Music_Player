@@ -9,13 +9,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.music_player.ui.theme.Music_PlayerTheme
-import kotlinx.coroutines.*
-import java.util.concurrent.TimeUnit
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.music_player.data.Song
+import com.example.music_player.domain.Player
+import com.example.music_player.domain.PlayerActivity
+import kotlinx.coroutines.*
 
 
 @Composable
@@ -63,15 +62,25 @@ fun ControlPanel(
 
 @Composable
 fun DurationPanel(
-    player: PlayerActivity,
+    player: Player,
     duration: Float,
+    next: () -> Unit,
     isPlaying: Boolean,
     modifier: Modifier = Modifier
 ){
     var current_time by remember { mutableStateOf(0f) }
 
-    LaunchedEffect(key1 = isPlaying, block = {
-        slideChange(player, {current_time += 1000f})
+    if (player.position() == 0f){
+        current_time = 0f
+    }else if (player.position() >= duration){
+        next()
+    }
+
+//    LaunchedEffect(key1 = Unit, block = {
+//        slideChange(player, {current_time += 1000f})
+//    })
+    LaunchedEffect(key1 = player.id, block = {
+        slideChange2({current_time = player.position()})
     })
 
     Column(modifier = modifier) {
@@ -105,7 +114,7 @@ fun BackgroundPanel(
 ){
     Box(
         modifier = modifier
-            .height(550.dp)
+            .height(525.dp)
             .fillMaxWidth(),
         contentAlignment = Alignment.Center
     ){
@@ -118,7 +127,7 @@ fun BackgroundPanel(
 }
 
 suspend fun slideChange(
-    player: PlayerActivity,
+    player: Player,
     perSecond: () -> Unit
 ){
     while(player.isPlaying()){
@@ -127,10 +136,20 @@ suspend fun slideChange(
     }
 }
 
+suspend fun slideChange2(
+    perSecond: () -> Unit
+){
+    while(true){
+        delay(1000L)
+        perSecond()
+    }
+}
+
 
 @Composable
 fun PlayerScreen(
-    player: PlayerActivity,
+    viewmodel: PlayerActivity,
+    player: Player,
     prev: () -> Unit,
     next: () -> Unit,
     song: Song,
@@ -146,7 +165,7 @@ fun PlayerScreen(
 
     Column(modifier = modifier) {
         BackgroundPanel(name = song.name)
-        DurationPanel(player, song.duration, isPlaying)
+        DurationPanel(player, song.duration, next, isPlaying)
         Spacer(modifier = Modifier.height(10.dp))
         ControlPanel(play_pause = { isPlaying = !isPlaying }, prev = prev, next = next, isPlaying)
     }

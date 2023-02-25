@@ -18,9 +18,6 @@ class Player(context: Context){
     }
 
     fun isPlaying(): Boolean{
-        player.setOnCompletionListener {
-            println("AAAAAAAAAAAAAAAA")
-        }
         return player.isPlaying
     }
 

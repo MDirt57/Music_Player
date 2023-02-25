@@ -71,7 +71,8 @@ fun DurationPanel(
         Slider(
             value = current_time,
             onValueChange = onSliderChange,
-            valueRange = 0f..duration
+            valueRange = 0f..duration,
+            colors = SliderDefaults.colors(MaterialTheme.colorScheme.tertiary)
         )
         Row(horizontalArrangement = Arrangement.SpaceAround, modifier = Modifier.fillMaxWidth()){
             Text(text = time_format(current_time))

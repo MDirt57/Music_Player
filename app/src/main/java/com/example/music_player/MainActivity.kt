@@ -8,11 +8,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.example.music_player.data.FileReader
+import com.example.music_player.domain.Player
 import com.example.music_player.domain.PlayerActivity
 import com.example.music_player.ui.theme.Music_PlayerTheme
 
 class MainActivity : ComponentActivity() {
-    var filereader = FileReader()
+    val filereader = FileReader()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,7 +24,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainScreen(context = applicationContext, songs = filereader.readFromRaw(applicationContext))
+                    MainScreen(player = Player(applicationContext), songs = filereader.readFromRaw(applicationContext))
                 }
             }
         }

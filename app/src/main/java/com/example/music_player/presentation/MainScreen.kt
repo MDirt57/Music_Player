@@ -72,12 +72,10 @@ fun SongList(
 
 @Composable
 fun MainScreen(
-    context: Context,
+    player: Player,
     songs: ArrayList<Song>,
     modifier: Modifier = Modifier,
 ){
-    val player = Player(context)
-
     var isPlaying by remember { mutableStateOf(false) }
     var song by remember { mutableStateOf(Song("",0, 0f)) }
 

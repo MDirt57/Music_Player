@@ -1,6 +1,6 @@
 package com.example.music_player
 
-import android.content.Context
+import android.net.Uri
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -17,7 +17,6 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import com.example.music_player.data.Song
 import com.example.music_player.domain.Player
-import com.example.music_player.domain.PlayerActivity
 
 
 @Composable
@@ -77,10 +76,10 @@ fun MainScreen(
     modifier: Modifier = Modifier,
 ){
     var isPlaying by remember { mutableStateOf(false) }
-    var song by remember { mutableStateOf(Song("",0, 0f)) }
+    var song by remember { mutableStateOf(Song("", Uri.parse(""), 0f)) }
 
     if (isPlaying){
-        player.set(song.id)
+        player.set(song.uri)
         player.play()
         PlayerScreen(
             player = player,

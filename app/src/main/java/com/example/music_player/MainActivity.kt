@@ -9,7 +9,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.example.music_player.data.FileReader
 import com.example.music_player.domain.Player
-import com.example.music_player.domain.PlayerActivity
 import com.example.music_player.ui.theme.Music_PlayerTheme
 
 class MainActivity : ComponentActivity() {
@@ -24,7 +23,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainScreen(player = Player(applicationContext), songs = filereader.readFromRaw(applicationContext))
+                    MainScreen(player = Player(applicationContext), songs = filereader.readFromExternal(applicationContext))
                 }
             }
         }

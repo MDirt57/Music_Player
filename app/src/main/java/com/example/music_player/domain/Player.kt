@@ -1,19 +1,25 @@
 package com.example.music_player.domain
 
+import android.content.ContentUris
 import android.content.Context
 import android.media.MediaPlayer
 import android.net.Uri
+import android.provider.MediaStore
+import java.io.FileDescriptor
 
 
 class Player(context: Context){
 
     val player = MediaPlayer()
     val context = context
-    var id = 0
+    var uri: Uri = Uri.parse("")
 
-    fun set(id: Int){
-        this.id = id
-        player.setDataSource(context, Uri.parse("android.resource://com.example.music_player/" + id))
+    fun set(uri: Uri){
+        this.uri = uri
+        val contentResolver = context.contentResolver
+        val fileDescriptor = contentResolver.openFileDescriptor(uri, "r")?.fileDescriptor
+        player.reset()
+        player.setDataSource(fileDescriptor)
         player.prepare()
     }
 

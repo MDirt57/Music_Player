@@ -10,10 +10,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import com.example.music_player.data.Song
 import com.example.music_player.domain.Player
-import com.example.music_player.domain.PlayerActivity
 import kotlinx.coroutines.*
 
 
@@ -99,7 +97,7 @@ fun StatefullDurationPanel(
         next()
     }
 
-    LaunchedEffect(key1 = player.id, block = {
+    LaunchedEffect(key1 = player.uri, block = {
         slideChange({current_time = player.position()})
     })
 

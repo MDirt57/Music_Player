@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.music_player.data.Song
 import com.example.music_player.domain.Player
@@ -125,6 +126,7 @@ fun BackgroundPanel(
     ){
         Text(
             text = name,
+            textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.tertiary,
             style = MaterialTheme.typography.headlineMedium,
         )

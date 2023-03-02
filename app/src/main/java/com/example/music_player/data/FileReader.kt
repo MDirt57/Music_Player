@@ -3,10 +3,8 @@ package com.example.music_player.data
 import android.content.ContentUris
 import android.content.Context
 import android.database.Cursor
-import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.provider.MediaStore
-import com.example.music_player.R
 import com.example.music_player.domain.FileReader
 
 class FileReader: FileReader {

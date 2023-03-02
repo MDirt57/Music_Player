@@ -1,12 +1,21 @@
 package com.example.music_player.domain
 
-import android.content.ContentUris
 import android.content.Context
 import android.media.MediaPlayer
 import android.net.Uri
-import android.provider.MediaStore
-import java.io.FileDescriptor
 
+fun test(){
+    val player = MediaPlayer()
+    val url = "https://soundcloud.com/hikigaya-hachiman-830702200/tokyo-ghoul-opening-unravel"
+    player.apply {
+        setDataSource(url)
+        prepareAsync()
+        setOnPreparedListener {
+            mp -> mp.start()
+            println("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSss")
+        }
+    }
+}
 
 class Player(context: Context){
 
@@ -21,10 +30,6 @@ class Player(context: Context){
         player.reset()
         player.setDataSource(fileDescriptor)
         player.prepare()
-    }
-
-    fun isPlaying(): Boolean{
-        return player.isPlaying
     }
 
     fun seekTo(time: Float){

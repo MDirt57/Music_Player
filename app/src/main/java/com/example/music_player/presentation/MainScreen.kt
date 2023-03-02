@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
@@ -21,13 +22,16 @@ import com.example.music_player.domain.Player
 
 @Composable
 fun SearchBar(
+    text: String,
+    onTyping: (String) -> Unit,
     modifier: Modifier = Modifier
 ){
-    TextField(value = "", onValueChange = {},
+    TextField(value = text, onValueChange = onTyping,
     leadingIcon = {
         Icon(imageVector = Icons.Default.Search, contentDescription = null)
     },
     placeholder = {Text(text = "Search")},
+    singleLine = true,
     modifier = modifier.fillMaxWidth())
 }
 
@@ -69,6 +73,16 @@ fun SongList(
     }
 }
 
+fun filterByName(name: String, songs: ArrayList<Song>): ArrayList<Song>{
+    val filter_songs = ArrayList<Song>()
+    songs.forEach {
+        if (it.name.lowercase().startsWith(name.lowercase())){
+            filter_songs.add(it)
+        }
+    }
+    return filter_songs
+}
+
 @Composable
 fun MainScreen(
     player: Player,
@@ -77,6 +91,7 @@ fun MainScreen(
 ){
     var isPlaying by remember { mutableStateOf(false) }
     var song by remember { mutableStateOf(Song("", Uri.parse(""), 0f)) }
+    var text by remember { mutableStateOf("") }
 
     if (isPlaying){
         player.set(song.uri)
@@ -93,8 +108,8 @@ fun MainScreen(
         }
     } else{
         Column(modifier = modifier) {
-            SearchBar()
-            SongList(songs = songs, onTap = { item -> song = item; isPlaying = true })
+            SearchBar(text, {newtext -> text = newtext})
+            SongList(songs = filterByName(text, songs), onTap = { item -> song = item; isPlaying = true })
         }
     }
 }

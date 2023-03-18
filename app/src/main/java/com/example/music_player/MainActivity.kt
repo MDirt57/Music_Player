@@ -12,10 +12,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.music_player.data.FileReader
 import com.example.music_player.domain.Player
-import com.example.music_player.domain.test
 import com.example.music_player.ui.theme.Music_PlayerTheme
-import java.util.jar.Manifest
-
+//ui thread, android handler, composables
 class MainActivity : ComponentActivity() {
     val filereader = FileReader()
 
@@ -34,7 +32,6 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     MainScreen(player = Player(applicationContext), songs = filereader.readFromExternal(applicationContext))
-                    test()
                 }
             }
         }

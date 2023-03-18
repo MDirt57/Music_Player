@@ -4,19 +4,6 @@ import android.content.Context
 import android.media.MediaPlayer
 import android.net.Uri
 
-fun test(){
-    val player = MediaPlayer()
-    val url = "https://soundcloud.com/hikigaya-hachiman-830702200/tokyo-ghoul-opening-unravel"
-    player.apply {
-        setDataSource(url)
-        prepareAsync()
-        setOnPreparedListener {
-            mp -> mp.start()
-            println("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSss")
-        }
-    }
-}
-
 class Player(context: Context){
 
     val player = MediaPlayer()

@@ -3,8 +3,6 @@ package com.example.music_player
 import android.app.Application
 import android.content.Context
 import android.content.ContextWrapper
-import com.example.music_player.data.readTest
-import com.example.music_player.data.sample
 import org.junit.Test
 
 import org.junit.Assert.*

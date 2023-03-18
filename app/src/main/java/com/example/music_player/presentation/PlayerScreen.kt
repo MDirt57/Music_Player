@@ -13,6 +13,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.music_player.data.Song
 import com.example.music_player.domain.Player
+import com.example.music_player.domain.slideChange
+import com.example.music_player.domain.time_format
 import kotlinx.coroutines.*
 
 
@@ -105,13 +107,6 @@ fun StatefullDurationPanel(
     DurationPanel(current_time = current_time, onSliderChange = {it -> current_time = it; player.seekTo(it)}, duration = duration, modifier = modifier)
 }
 
-fun time_format(milliseconds: Float): String{
-    val sec = milliseconds/1000
-    val minutes = (sec/60).toInt()
-    val seconds = (sec - 60*minutes).toInt()
-    return "${if (minutes>=10) minutes else "0$minutes"}:${if (seconds>=10) seconds else "0$seconds"}"
-}
-
 
 @Composable
 fun BackgroundPanel(
@@ -130,16 +125,6 @@ fun BackgroundPanel(
             color = MaterialTheme.colorScheme.tertiary,
             style = MaterialTheme.typography.headlineMedium,
         )
-    }
-}
-
-
-suspend fun slideChange(
-    perSecond: () -> Unit
-){
-    while(true){
-        delay(1000L)
-        perSecond()
     }
 }
 

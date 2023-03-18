@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
@@ -14,25 +16,55 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.example.music_player.data.Playlist
 import com.example.music_player.data.Song
 import com.example.music_player.domain.Player
+import com.example.music_player.domain.filterTest
+import com.example.music_player.presentation.PlaylistUI
 
 
 @Composable
 fun SearchBar(
-    text: String,
+    tempText: String,
     onTyping: (String) -> Unit,
+    onPress: (String) -> Unit,
+    focusManager: FocusManager,
     modifier: Modifier = Modifier
 ){
-    TextField(value = text, onValueChange = onTyping,
+    TextField(value = tempText, onValueChange = onTyping,
     leadingIcon = {
         Icon(imageVector = Icons.Default.Search, contentDescription = null)
     },
     placeholder = {Text(text = "Search")},
+    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+    keyboardActions = KeyboardActions(onDone = {
+        onPress(tempText)
+        focusManager.clearFocus()
+    }),
     singleLine = true,
     modifier = modifier.fillMaxWidth())
+}
+
+@Composable
+fun StatefullSearchBar(
+    text: String,
+    onPress: (String) -> Unit,
+    focusManager: FocusManager,
+    modifier: Modifier = Modifier
+){
+    var tempText by remember {mutableStateOf(text)}
+    SearchBar(
+        tempText = tempText,
+        onTyping = {newtext -> tempText = newtext},
+        onPress = onPress,
+        focusManager = focusManager,
+        modifier = modifier
+    )
 }
 
 @Composable
@@ -62,9 +94,9 @@ fun SongPanel(
 
 @Composable
 fun SongList(
-    modifier: Modifier = Modifier,
     songs: List<Song>,
-    onTap: (Song) -> Unit
+    onTap: (Song) -> Unit,
+    modifier: Modifier = Modifier
 ){
     LazyColumn(modifier = modifier){
         items(songs){
@@ -73,15 +105,6 @@ fun SongList(
     }
 }
 
-fun filterByName(name: String, songs: ArrayList<Song>): ArrayList<Song>{
-    val filter_songs = ArrayList<Song>()
-    songs.forEach {
-        if (it.name.lowercase().startsWith(name.lowercase())){
-            filter_songs.add(it)
-        }
-    }
-    return filter_songs
-}
 
 @Composable
 fun MainScreen(
@@ -92,6 +115,12 @@ fun MainScreen(
     var isPlaying by remember { mutableStateOf(false) }
     var song by remember { mutableStateOf(Song("", Uri.parse(""), 0f)) }
     var text by remember { mutableStateOf("") }
+    val focusManager = LocalFocusManager.current
+
+    val playlist: ArrayList<Playlist> = ArrayList<Playlist>()
+    playlist.add(Playlist("number1", songs))
+    playlist.add(Playlist("number2", songs))
+    playlist.add(Playlist("number3", songs))
 
     if (isPlaying){
         player.set(song.uri)
@@ -108,8 +137,9 @@ fun MainScreen(
         }
     } else{
         Column(modifier = modifier) {
-            SearchBar(text, {newtext -> text = newtext})
-            SongList(songs = filterByName(text, songs), onTap = { item -> song = item; isPlaying = true })
+            StatefullSearchBar(text, {newtext -> text = newtext}, focusManager)
+//            PlaylistUI(playlists = playlist, onTap = {item -> song = item; isPlaying = true})
+            SongList(songs = filterTest(text, songs), onTap = { item -> song = item; isPlaying = true })
         }
     }
 }

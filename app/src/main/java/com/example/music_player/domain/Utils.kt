@@ -10,7 +10,7 @@ fun time_format(milliseconds: Float): String{
     return "${if (minutes>=10) minutes else "0$minutes"}:${if (seconds>=10) seconds else "0$seconds"}"
 }
 
-fun filterTest(name: String, songs: ArrayList<Song>): ArrayList<Song>{
+fun filterSongs(name: String, songs: ArrayList<Song>): ArrayList<Song>{
     val filter_songs = ArrayList<Song>(songs.filter { song -> song.name.lowercase().startsWith(name.lowercase()) })
     return filter_songs
 }

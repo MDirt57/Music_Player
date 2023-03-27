@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import com.example.music_player.data.Playlist
 import com.example.music_player.data.Song
 import com.example.music_player.domain.Player
-import com.example.music_player.domain.filterTest
 import com.example.music_player.presentation.PlaylistUI
 
 
@@ -110,6 +109,7 @@ fun SongList(
 fun MainScreen(
     player: Player,
     songs: ArrayList<Song>,
+    change_theme: (String) -> Unit,
     modifier: Modifier = Modifier,
 ){
     var isPlaying by remember { mutableStateOf(false) }
@@ -138,8 +138,8 @@ fun MainScreen(
     } else{
         Column(modifier = modifier) {
             StatefullSearchBar(text, {newtext -> text = newtext}, focusManager)
-//            PlaylistUI(playlists = playlist, onTap = {item -> song = item; isPlaying = true})
-            SongList(songs = filterTest(text, songs), onTap = { item -> song = item; isPlaying = true })
+            PlaylistUI(playlists = playlist, onTap = {item -> song = item; isPlaying = true}, change_theme)
+//            SongList(songs = filterSongs(text, songs), onTap = { item -> song = item; isPlaying = true })
         }
     }
 }

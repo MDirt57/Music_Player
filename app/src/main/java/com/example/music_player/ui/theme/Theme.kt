@@ -10,6 +10,8 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -37,6 +39,42 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+private val Classic = lightColorScheme(
+    primary = DarkBlue,
+    secondary = PaleYellow,
+    tertiary = DarkBlue
+)
+
+private val Nature = lightColorScheme(
+    primary = DarkGreen,
+    secondary = PaleYellow,
+    tertiary = DarkGreen
+)
+
+private val Red_Sky = lightColorScheme(
+    primary = DarkRed,
+    secondary = PaleYellow,
+    tertiary = DarkRed
+)
+
+@Composable
+fun MyAppTheme(
+    currentTheme: String,
+    content: @Composable () -> Unit
+){
+    val colorScheme = when (currentTheme){
+        "Classic" -> Classic
+        "Red Sky" -> Red_Sky
+        "Nature" -> Nature
+        else -> Classic
+    }
+
+    MaterialTheme(
+        colorScheme = colorScheme,
+        typography = Typography,
+        content = content
+    )
+}
 @Composable
 fun Music_PlayerTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),

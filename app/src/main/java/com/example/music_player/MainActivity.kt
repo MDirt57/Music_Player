@@ -12,10 +12,12 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.music_player.data.FileReader
 import com.example.music_player.domain.Player
+import com.example.music_player.presentation.App
 import com.example.music_player.ui.theme.Music_PlayerTheme
+import com.example.music_player.ui.theme.MyAppTheme
+
 //ui thread, android handler, composables
 class MainActivity : ComponentActivity() {
-    val filereader = FileReader()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,14 +28,7 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            Music_PlayerTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    MainScreen(player = Player(applicationContext), songs = filereader.readFromExternal(applicationContext))
-                }
-            }
+            App(applicationContext = applicationContext)
         }
     }
 }

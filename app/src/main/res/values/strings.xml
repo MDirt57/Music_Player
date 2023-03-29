@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Music_Player</string>
+    <string name="theme">Classic</string>
 </resources>

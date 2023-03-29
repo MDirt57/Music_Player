@@ -20,74 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 
 @Composable
-fun ContentPanel(
-    text: String,
-    onTyping: (String) -> Unit,
-    color: Color,
-    modifier: Modifier = Modifier
-){
-    Surface(
-        color = color,
-        modifier = modifier
-    ){
-        Column(){
-            Text(text = "Name", modifier = Modifier.padding(8.dp))
-            TextField(
-                value = text,
-                onValueChange = onTyping,
-                singleLine = true,
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color.Transparent,
-                    textColor = Color.White,
-                    cursorColor = Color.White
-                )
-            )
-        }
-    }
-}
-
-
-@Composable
-fun BottomPanel(
-    onPress: () -> Unit,
-    onCancel: () -> Unit,
-    color: Color,
-    modifier: Modifier = Modifier
-){
-    Surface(
-        color = color,
-        modifier = modifier
-    ){
-        Row(
-            horizontalArrangement = Arrangement.SpaceAround
-        ){
-            Button(
-                onClick = onCancel,
-                shape = RectangleShape,
-                modifier = Modifier.background(Color.Transparent),
-                colors = ButtonDefaults.textButtonColors(
-                    containerColor = Color.Transparent,
-                    contentColor = Color.White
-                )
-            ) {
-                Text(text = "Cancel")
-            }
-            Button(
-                onClick = onPress,
-                shape = RectangleShape,
-                modifier = Modifier.background(Color.Transparent),
-                colors = ButtonDefaults.textButtonColors(
-                    containerColor = Color.Transparent,
-                    contentColor = Color.White
-                )
-            ) {
-                Text(text = "Create")
-            }
-        }
-    }
-}
-
-@Composable
 fun CreatePlaylistPanel(
     onPress: (String) -> Unit,
     onCancel: () -> Unit,
@@ -102,8 +34,8 @@ fun CreatePlaylistPanel(
         Column(
             modifier = modifier.border(border = BorderStroke(2.dp, Color.White), RectangleShape )
         ){
-            ContentPanel(text = text, onTyping = {newtext -> text = newtext}, color = color, modifier = modifier.width(250.dp))
-            BottomPanel(onPress = {onPress(text)}, onCancel = onCancel, color = color, modifier = modifier.width(250.dp))
+            NameInputPanel(text = text, onTyping = {newtext -> text = newtext}, color = color, modifier = modifier.width(250.dp))
+            BottomPanel(onPress = {onPress(text)}, onCancel = onCancel, color = color, actionName = "Create", modifier = modifier.width(250.dp))
         }
     }
 }

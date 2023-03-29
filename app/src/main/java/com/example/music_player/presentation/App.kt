@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.example.music_player.MainScreen
+import com.example.music_player.data.Config
 import com.example.music_player.data.FileReader
 import com.example.music_player.domain.Player
 import com.example.music_player.ui.theme.MyAppTheme
@@ -18,6 +19,7 @@ import com.example.music_player.ui.theme.MyAppTheme
 @Composable
 fun App(applicationContext: Context){
     val filereader = FileReader()
+    val config = Config(activity = applicationContext, resources = resou)
 
     var currentTheme by remember {mutableStateOf("")}
     MyAppTheme(currentTheme = currentTheme) {

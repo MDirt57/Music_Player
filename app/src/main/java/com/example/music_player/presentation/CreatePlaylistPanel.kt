@@ -18,6 +18,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
 
 @Composable
 fun CreatePlaylistPanel(
@@ -26,16 +27,17 @@ fun CreatePlaylistPanel(
     color: Color,
     modifier: Modifier = Modifier
 ){
+    var text by remember { mutableStateOf("") }
     Popup(
+        properties = PopupProperties(focusable = true),
         alignment = Alignment.Center,
         onDismissRequest = {}
     ) {
-        var text by remember { mutableStateOf("") }
         Column(
             modifier = modifier.border(border = BorderStroke(2.dp, Color.White), RectangleShape )
         ){
             NameInputPanel(text = text, onTyping = {newtext -> text = newtext}, color = color, modifier = modifier.width(250.dp))
-            BottomPanel(onPress = {onPress(text)}, onCancel = onCancel, color = color, actionName = "Create", modifier = modifier.width(250.dp))
+            BottomPanel(onPress = {onPress(text); onCancel()}, onCancel = onCancel, color = color, actionName = "Create", modifier = modifier.width(250.dp))
         }
     }
 }

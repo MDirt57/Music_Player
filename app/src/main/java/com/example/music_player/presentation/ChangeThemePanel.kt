@@ -1,5 +1,6 @@
 package com.example.music_player.presentation
 
+import android.content.Context
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -17,6 +18,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
+import com.example.music_player.data.Config
 import com.example.music_player.ui.theme.DarkBlue
 import com.example.music_player.ui.theme.DarkGreen
 import com.example.music_player.ui.theme.DarkRed
@@ -26,9 +29,11 @@ import com.example.music_player.ui.theme.DarkRed
 fun ChangeThemePanel(
     on_close: () -> Unit,
     change_theme: (String) -> Unit,
+    config: Config,
     modifier: Modifier = Modifier
 ){
     Popup(
+        properties = PopupProperties(focusable = true),
         alignment = Alignment.Center,
         onDismissRequest = {}
     ) {
@@ -36,7 +41,7 @@ fun ChangeThemePanel(
         Column(modifier = modifier.border(border = BorderStroke(2.dp, Color.White), RectangleShape)) {
             ColorPickPanel(theme = theme, change_theme = {choice -> theme = choice}, modifier = Modifier.width(250.dp))
             BottomPanel(
-                onPress = { change_theme(theme); on_close() },
+                onPress = { change_theme(theme); config.writeTheme(theme); on_close() },
                 onCancel = on_close,
                 color = MaterialTheme.colorScheme.primary,
                 actionName = "Change",

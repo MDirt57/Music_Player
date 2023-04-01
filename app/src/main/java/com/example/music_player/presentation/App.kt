@@ -1,6 +1,9 @@
 package com.example.music_player.presentation
 
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
+import android.content.res.Resources
 import android.provider.Settings.Global.getString
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -15,13 +18,14 @@ import com.example.music_player.data.Config
 import com.example.music_player.data.FileReader
 import com.example.music_player.domain.Player
 import com.example.music_player.ui.theme.MyAppTheme
+import com.example.music_player.R
 
 @Composable
 fun App(applicationContext: Context){
     val filereader = FileReader()
-    val config = Config(activity = applicationContext, resources = resou)
+    val config = Config(applicationContext)
 
-    var currentTheme by remember {mutableStateOf("")}
+    var currentTheme by remember {mutableStateOf(config.readTheme())}
     MyAppTheme(currentTheme = currentTheme) {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -30,7 +34,8 @@ fun App(applicationContext: Context){
             MainScreen(
                 player = Player(applicationContext),
                 songs = filereader.readFromExternal(applicationContext),
-                change_theme = {newtheme -> currentTheme = newtheme}
+                change_theme = {newtheme -> currentTheme = newtheme},
+                config = config
             )
         }
     }

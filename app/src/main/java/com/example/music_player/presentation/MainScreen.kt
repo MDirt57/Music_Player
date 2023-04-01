@@ -1,5 +1,6 @@
 package com.example.music_player
 
+import android.content.Context
 import android.net.Uri
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.border
@@ -21,6 +22,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.example.music_player.data.Config
 import com.example.music_player.data.Playlist
 import com.example.music_player.data.Song
 import com.example.music_player.domain.Player
@@ -97,7 +99,9 @@ fun SongList(
     onTap: (Song) -> Unit,
     modifier: Modifier = Modifier
 ){
-    LazyColumn(modifier = modifier){
+    LazyColumn(
+        modifier = modifier
+    ){
         items(songs){
                 item -> SongPanel(name = item.name, onTap = { onTap(item) })
         }
@@ -110,6 +114,7 @@ fun MainScreen(
     player: Player,
     songs: ArrayList<Song>,
     change_theme: (String) -> Unit,
+    config: Config,
     modifier: Modifier = Modifier,
 ){
     var isPlaying by remember { mutableStateOf(false) }
@@ -118,9 +123,7 @@ fun MainScreen(
     val focusManager = LocalFocusManager.current
 
     val playlist: ArrayList<Playlist> = ArrayList<Playlist>()
-    playlist.add(Playlist("number1", songs))
-    playlist.add(Playlist("number2", songs))
-    playlist.add(Playlist("number3", songs))
+    playlist.add(Playlist("Local", songs))
 
     if (isPlaying){
         player.set(song.uri)
@@ -138,7 +141,7 @@ fun MainScreen(
     } else{
         Column(modifier = modifier) {
             StatefullSearchBar(text, {newtext -> text = newtext}, focusManager)
-            PlaylistUI(playlists = playlist, onTap = {item -> song = item; isPlaying = true}, change_theme)
+            PlaylistUI(playlists = playlist, onTap = {item -> song = item; isPlaying = true}, change_theme, config)
 //            SongList(songs = filterSongs(text, songs), onTap = { item -> song = item; isPlaying = true })
         }
     }

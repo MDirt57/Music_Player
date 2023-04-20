@@ -19,11 +19,14 @@ import com.example.music_player.data.FileReader
 import com.example.music_player.domain.Player
 import com.example.music_player.ui.theme.MyAppTheme
 import com.example.music_player.R
+import com.example.music_player.data.Playlist
 
 @Composable
 fun App(applicationContext: Context){
     val filereader = FileReader()
     val config = Config(applicationContext)
+    val playlists = arrayListOf(Playlist("Local", filereader.readFromExternal(applicationContext)))
+    playlists.addAll(config.readPlaylists(playlists.get(0)))
 
     var currentTheme by remember {mutableStateOf(config.readTheme())}
     MyAppTheme(currentTheme = currentTheme) {
@@ -33,7 +36,7 @@ fun App(applicationContext: Context){
         ) {
             MainScreen(
                 player = Player(applicationContext),
-                songs = filereader.readFromExternal(applicationContext),
+                playlists = playlists,
                 change_theme = {newtheme -> currentTheme = newtheme},
                 config = config
             )

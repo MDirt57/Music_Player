@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -73,10 +72,15 @@ fun ColorPickPanel(
                         ),
                         modifier = Modifier
                             .size(36.dp)
-                            .border(border =
-                            if (theme.equals(colors_name.get(it))) BorderStroke(3.dp, Color.DarkGray)
-                            else BorderStroke(0.dp, Color.Transparent),
-                                CircleShape)
+                            .border(
+                                border =
+                                if (theme.equals(colors_name.get(it))) BorderStroke(
+                                    3.dp,
+                                    Color.DarkGray
+                                )
+                                else BorderStroke(0.dp, Color.Transparent),
+                                CircleShape
+                            )
                     ){}
                     Text(text = colors_name.get(it))
                 }
@@ -95,7 +99,7 @@ fun BottomPanel(
 ){
     Surface(
         color = color,
-        modifier = modifier
+        modifier = modifier.border(border = BorderStroke(2.dp, Color.White), RectangleShape)
     ){
         Row(
             horizontalArrangement = Arrangement.SpaceAround

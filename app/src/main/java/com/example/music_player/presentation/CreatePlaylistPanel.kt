@@ -28,6 +28,9 @@ fun CreatePlaylistPanel(
     modifier: Modifier = Modifier
 ){
     var text by remember { mutableStateOf("") }
+    if (text.length > 14){
+        text = text.slice(0..14)
+    }
     Popup(
         properties = PopupProperties(focusable = true),
         alignment = Alignment.Center,

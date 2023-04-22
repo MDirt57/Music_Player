@@ -15,7 +15,6 @@ import com.example.music_player.data.Song
 import com.example.music_player.domain.Player
 import com.example.music_player.domain.slideChange
 import com.example.music_player.domain.time_format
-import kotlinx.coroutines.*
 
 
 @Composable

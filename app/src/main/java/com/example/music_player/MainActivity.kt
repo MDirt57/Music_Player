@@ -2,34 +2,42 @@ package com.example.music_player
 
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.view.WindowManager
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.music_player.data.FileReader
-import com.example.music_player.domain.Player
+import com.example.music_player.data.Config
 import com.example.music_player.presentation.App
-import com.example.music_player.ui.theme.Music_PlayerTheme
-import com.example.music_player.ui.theme.MyAppTheme
-import java.util.jar.Manifest
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val READ_EXTERNAL_STORAGE_PERMISSION_CODE = 101
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), READ_EXTERNAL_STORAGE_PERMISSION_CODE)
-        }
+        requestPermission(this)
         setContent {
             App(applicationContext = applicationContext)
         }
     }
+
+    override fun onStop() {
+        super.onStop()
+        val config = Config(applicationContext)
+        config.writeIndex(1, 0)
+    }
+
+    fun requestPermission(activity: MainActivity){
+        runBlocking {
+            launch{
+                while (ContextCompat.checkSelfPermission(activity, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(activity, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), 101)
+                    delay(1000)
+                }
+            }
+        }
+    }
+
 }

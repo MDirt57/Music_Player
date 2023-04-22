@@ -2,9 +2,7 @@ package com.example.music_player.data
 
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
-import android.net.Uri
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 
 class Config(context: Context){
@@ -51,12 +49,12 @@ class Config(context: Context){
         writer.apply()
     }
 
-    fun readIndex(): Int{
-        return sharedPref.getInt("index", 0)
+    fun readIndex(list: Int): Int{
+        return sharedPref.getInt(if (list == 0) "playlist" else "songlist", 0)
     }
 
-    fun writeIndex(index: Int){
-        writer.putInt("index", index)
+    fun writeIndex(list: Int, index: Int){
+        writer.putInt(if (list == 0) "playlist" else "songlist", index)
         writer.apply()
     }
 }

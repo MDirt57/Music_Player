@@ -10,8 +10,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -42,20 +41,24 @@ private val LightColorScheme = lightColorScheme(
 private val Classic = lightColorScheme(
     primary = DarkBlue,
     secondary = PaleYellow,
-    tertiary = DarkBlue
+    tertiary = DarkBlue,
+    background = Color.White
 )
 
 private val Nature = lightColorScheme(
     primary = DarkGreen,
     secondary = PaleYellow,
-    tertiary = DarkGreen
+    tertiary = DarkGreen,
+    background = Color.White
 )
 
 private val Red_Sky = lightColorScheme(
     primary = DarkRed,
     secondary = PaleYellow,
-    tertiary = DarkRed
+    tertiary = DarkRed,
+    background = Color.White
 )
+
 
 @Composable
 fun MyAppTheme(
@@ -68,6 +71,7 @@ fun MyAppTheme(
         "Nature" -> Nature
         else -> Classic
     }
+
 
     MaterialTheme(
         colorScheme = colorScheme,

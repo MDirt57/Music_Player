@@ -13,7 +13,6 @@ import com.example.music_player.data.Config
 import com.example.music_player.data.Playlist
 import com.example.music_player.data.Song
 import com.example.music_player.domain.Player
-import com.example.music_player.domain.filterSongs
 import com.example.music_player.presentation.*
 
 @Composable
@@ -54,6 +53,7 @@ fun MainScreen(
 
     if (is_addingsongs){
         AddSongsPanel(
+            config = config,
             playlist = current_playlist,
             local_songs = playlists.get(0).songs,
             onCancel = { is_addingsongs = false }

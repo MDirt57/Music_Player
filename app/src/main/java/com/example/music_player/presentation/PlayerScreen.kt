@@ -8,13 +8,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.music_player.data.Song
 import com.example.music_player.domain.Player
+import com.example.music_player.domain.nextSong
 import com.example.music_player.domain.slideChange
 import com.example.music_player.domain.time_format
+import kotlinx.coroutines.async
 
 
 @Composable
@@ -93,14 +96,11 @@ fun StatefullDurationPanel(
 ){
     var current_time by remember { mutableStateOf(0f) }
 
-    if (player.position() == 0f){
-        current_time = 0f
-    }else if (player.position() >= duration){
-        next()
-    }
-
     LaunchedEffect(key1 = player.uri, block = {
-        slideChange({current_time = player.position()})
+        val slideChangeAsync = async { slideChange({current_time = player.position()}) }
+        val nextSongAsync = async { nextSong(player, duration, {current_time = 0f}, next) }
+        slideChangeAsync.await()
+        nextSongAsync.await()
     })
 
     DurationPanel(current_time = current_time, onSliderChange = {it -> current_time = it; player.seekTo(it)}, duration = duration, modifier = modifier)
@@ -112,9 +112,11 @@ fun BackgroundPanel(
     modifier: Modifier = Modifier,
     name: String
 ){
+    val screenHeight = LocalConfiguration.current.screenHeightDp
+
     Box(
         modifier = modifier
-            .height(525.dp)
+            .height((screenHeight - 225).dp)
             .fillMaxWidth(),
         contentAlignment = Alignment.Center
     ){

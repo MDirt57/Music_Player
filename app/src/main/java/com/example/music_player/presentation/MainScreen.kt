@@ -13,6 +13,7 @@ import com.example.music_player.data.Config
 import com.example.music_player.data.Playlist
 import com.example.music_player.data.Song
 import com.example.music_player.domain.Player
+import com.example.music_player.domain.moveSong
 import com.example.music_player.presentation.*
 
 @Composable
@@ -61,13 +62,11 @@ fun MainScreen(
     }
 
     if (isPlaying){
-        player.set(song.uri)
-        player.play()
         PlayerScreen(
             player = player,
             song = song,
-            prev = {song = if (current_playlist.songs.indexOf(song) - 1 >= 0) current_playlist.songs.get(current_playlist.songs.indexOf(song) - 1) else current_playlist.songs.get(current_playlist.songs.size - 1); player.stop()},
-            next = {song = if (current_playlist.songs.indexOf(song) + 1 < current_playlist.songs.size) current_playlist.songs.get(current_playlist.songs.indexOf(song) + 1) else current_playlist.songs.get(0); player.stop()}
+            prev = {moveSong({new_song -> song = new_song}, -1, player, song, current_playlist)},
+            next = {moveSong({new_song -> song = new_song}, 1, player, song, current_playlist)}
         )
         BackHandler() {
             isPlaying = false
@@ -83,7 +82,7 @@ fun MainScreen(
                 createPlaylist = {is_createplaylist = true},
                 deletePlaylist = {val index = playlists.indexOf(current_playlist) - 1; playlists.remove(current_playlist); current_playlist = playlists.get(index)},
                 modifier = Modifier.height(50.dp))
-            AllPlaylists(playlists = playlists, onTap = {item -> song = item; isPlaying = true}, onScroll = {current -> current_playlist = current}, config)
+            AllPlaylists(playlists = playlists, onTap = {item -> song = item; isPlaying = true; player.set(song.uri); player.play()}, onScroll = {current -> current_playlist = current}, config)
         }
     }
 }

@@ -18,7 +18,6 @@ fun filterSongs(name: String, songs: List<Song>): ArrayList<Song>{
 
 fun moveSong(changeSong: (Song) -> Unit, direct: Int, player: Player, song: Song, current_playlist: Playlist){
     var new_song = song
-
     if (direct == 1){
         new_song = if (current_playlist.songs.indexOf(song) + 1 < current_playlist.songs.size) current_playlist.songs.get(current_playlist.songs.indexOf(song) + 1) else current_playlist.songs.get(0)
     }else if (direct == -1){
